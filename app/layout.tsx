@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "JACK STUDIO HUB",
-  description: "Centralized service and store operations for JACK STUDIO retail stores."
+  title: "JACK STUDIO SERVICE",
+  description: "Centralized service and store operations for JACK STUDIO retail outlets."
 };
 
 export default function RootLayout({

@@ -13,7 +13,7 @@ export const rolePermissions: Record<Role, Permission[]> = {
     "store_request:approve",
     "inventory:view"
   ],
-  hub_admin: [
+  service_admin: [
     "service:create",
     "service:review",
     "service:quote",

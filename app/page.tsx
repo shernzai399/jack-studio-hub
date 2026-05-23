@@ -39,7 +39,7 @@ export default function DashboardPage() {
           <Card>
             <div className="mb-4 flex items-center justify-between gap-3">
               <h3 className="text-lg font-semibold">Service Module</h3>
-              <Badge tone="warn">Hub review queue</Badge>
+              <Badge tone="warn">Service review queue</Badge>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[760px] text-left text-sm">

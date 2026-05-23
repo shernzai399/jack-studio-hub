@@ -1,4 +1,4 @@
-# JACK STUDIO HUB Page Structure
+# JACK STUDIO SERVICE Page Structure
 
 ## Dashboard
 - Operational KPIs

@@ -1,7 +1,7 @@
 create type app_role as enum (
   'store_staff',
   'store_manager',
-  'hub_admin',
+  'service_admin',
   'inventory_admin',
   'super_admin'
 );
@@ -53,7 +53,7 @@ create table public.stores (
   name text not null,
   address text,
   phone text,
-  is_hub boolean not null default false,
+  is_service_center boolean not null default false,
   created_at timestamptz not null default now()
 );
 
@@ -202,7 +202,7 @@ alter table public.backorders enable row level security;
 
 create policy "users can read active users"
 on public.users for select
-using (public.current_user_role() in ('store_manager', 'hub_admin', 'inventory_admin', 'super_admin'));
+using (public.current_user_role() in ('store_manager', 'service_admin', 'inventory_admin', 'super_admin'));
 
 create policy "stores are visible to authenticated users"
 on public.stores for select
@@ -210,33 +210,33 @@ using (auth.role() = 'authenticated');
 
 create policy "customers visible by operations"
 on public.customers for select
-using (public.current_user_role() in ('store_staff', 'store_manager', 'hub_admin', 'super_admin'));
+using (public.current_user_role() in ('store_staff', 'store_manager', 'service_admin', 'super_admin'));
 
 create policy "stores create customers"
 on public.customers for insert
-with check (public.current_user_role() in ('store_staff', 'store_manager', 'hub_admin', 'super_admin'));
+with check (public.current_user_role() in ('store_staff', 'store_manager', 'service_admin', 'super_admin'));
 
-create policy "service orders visible by store or hub"
+create policy "service orders visible by store or service admin"
 on public.service_orders for select
 using (
-  public.current_user_role() in ('hub_admin', 'super_admin')
+  public.current_user_role() in ('service_admin', 'super_admin')
   or store_id = public.current_user_store_id()
 );
 
 create policy "service orders created by stores"
 on public.service_orders for insert
 with check (
-  public.current_user_role() in ('store_staff', 'store_manager', 'hub_admin', 'super_admin')
+  public.current_user_role() in ('store_staff', 'store_manager', 'service_admin', 'super_admin')
   and (
-    public.current_user_role() in ('hub_admin', 'super_admin')
+    public.current_user_role() in ('service_admin', 'super_admin')
     or store_id = public.current_user_store_id()
   )
 );
 
-create policy "service orders updated by store managers or hub"
+create policy "service orders updated by store managers or service admin"
 on public.service_orders for update
 using (
-  public.current_user_role() in ('hub_admin', 'super_admin')
+  public.current_user_role() in ('service_admin', 'super_admin')
   or (
     public.current_user_role() = 'store_manager'
     and store_id = public.current_user_store_id()
@@ -250,7 +250,7 @@ using (
     select 1 from public.service_orders so
     where so.id = service_order_id
     and (
-      public.current_user_role() in ('hub_admin', 'super_admin')
+      public.current_user_role() in ('service_admin', 'super_admin')
       or so.store_id = public.current_user_store_id()
     )
   )
@@ -263,7 +263,7 @@ with check (
     select 1 from public.service_orders so
     where so.id = service_order_id
     and (
-      public.current_user_role() in ('hub_admin', 'super_admin')
+      public.current_user_role() in ('service_admin', 'super_admin')
       or so.store_id = public.current_user_store_id()
     )
   )
@@ -281,7 +281,7 @@ with check (public.current_user_role() in ('inventory_admin', 'super_admin'));
 create policy "inventory visible by store or inventory admins"
 on public.inventory for select
 using (
-  public.current_user_role() in ('inventory_admin', 'hub_admin', 'super_admin')
+  public.current_user_role() in ('inventory_admin', 'service_admin', 'super_admin')
   or store_id = public.current_user_store_id()
 );
 
@@ -293,7 +293,7 @@ with check (public.current_user_role() in ('inventory_admin', 'super_admin'));
 create policy "store requests visible by store or HQ"
 on public.store_requests for select
 using (
-  public.current_user_role() in ('hub_admin', 'inventory_admin', 'super_admin')
+  public.current_user_role() in ('service_admin', 'inventory_admin', 'super_admin')
   or from_store_id = public.current_user_store_id()
   or to_store_id = public.current_user_store_id()
 );
@@ -301,13 +301,13 @@ using (
 create policy "store requests created by stores"
 on public.store_requests for insert
 with check (
-  public.current_user_role() in ('store_staff', 'store_manager', 'inventory_admin', 'hub_admin', 'super_admin')
+  public.current_user_role() in ('store_staff', 'store_manager', 'inventory_admin', 'service_admin', 'super_admin')
 );
 
 create policy "store requests updated by managers and HQ"
 on public.store_requests for update
 using (
-  public.current_user_role() in ('store_manager', 'hub_admin', 'inventory_admin', 'super_admin')
+  public.current_user_role() in ('store_manager', 'service_admin', 'inventory_admin', 'super_admin')
 );
 
 create policy "request items visible with parent"
@@ -317,7 +317,7 @@ using (
     select 1 from public.store_requests sr
     where sr.id = store_request_id
     and (
-      public.current_user_role() in ('hub_admin', 'inventory_admin', 'super_admin')
+      public.current_user_role() in ('service_admin', 'inventory_admin', 'super_admin')
       or sr.from_store_id = public.current_user_store_id()
       or sr.to_store_id = public.current_user_store_id()
     )
@@ -331,7 +331,7 @@ with check (
     select 1 from public.store_requests sr
     where sr.id = store_request_id
     and (
-      public.current_user_role() in ('hub_admin', 'inventory_admin', 'super_admin')
+      public.current_user_role() in ('service_admin', 'inventory_admin', 'super_admin')
       or sr.from_store_id = public.current_user_store_id()
     )
   )
@@ -339,22 +339,22 @@ with check (
 
 create policy "request items updated by HQ"
 on public.store_request_items for update
-using (public.current_user_role() in ('hub_admin', 'inventory_admin', 'super_admin'))
-with check (public.current_user_role() in ('hub_admin', 'inventory_admin', 'super_admin'));
+using (public.current_user_role() in ('service_admin', 'inventory_admin', 'super_admin'))
+with check (public.current_user_role() in ('service_admin', 'inventory_admin', 'super_admin'));
 
 create policy "backorders visible by store or HQ"
 on public.backorders for select
 using (
-  public.current_user_role() in ('hub_admin', 'inventory_admin', 'super_admin')
+  public.current_user_role() in ('service_admin', 'inventory_admin', 'super_admin')
   or store_id = public.current_user_store_id()
 );
 
 create policy "backorders created by stores or HQ"
 on public.backorders for insert
 with check (
-  public.current_user_role() in ('store_staff', 'store_manager', 'hub_admin', 'inventory_admin', 'super_admin')
+  public.current_user_role() in ('store_staff', 'store_manager', 'service_admin', 'inventory_admin', 'super_admin')
   and (
-    public.current_user_role() in ('hub_admin', 'inventory_admin', 'super_admin')
+    public.current_user_role() in ('service_admin', 'inventory_admin', 'super_admin')
     or store_id = public.current_user_store_id()
   )
 );

@@ -16,7 +16,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-black/10 bg-ink text-white lg:block">
         <div className="px-6 py-6">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/55">JACK STUDIO</p>
-          <h1 className="mt-2 text-2xl font-semibold tracking-normal">Hub</h1>
+          <h1 className="mt-2 text-2xl font-semibold tracking-normal">Service</h1>
         </div>
         <nav className="grid gap-1 px-3">
           {navItems.map((item) => {
@@ -38,11 +38,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         <header className="sticky top-0 z-10 border-b border-black/10 bg-pearl/90 px-4 py-4 backdrop-blur md:px-8">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-clay">13 stores connected</p>
-              <h2 className="text-xl font-semibold text-ink">Central Hub Operations</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-clay">13 outlets connected</p>
+              <h2 className="text-xl font-semibold text-ink">Central Service Operations</h2>
             </div>
             <div className="rounded-md border border-black/10 bg-white px-3 py-2 text-sm text-moss">
-              Role preview: Hub Admin
+              Role preview: Service Admin
             </div>
           </div>
         </header>

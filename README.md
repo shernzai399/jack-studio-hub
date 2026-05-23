@@ -1,6 +1,22 @@
-# JACK STUDIO HUB
+# JACK STUDIO SERVICE
 
-Next.js starter app for connecting 13 JACK STUDIO retail stores with a centralized Hub operation.
+Next.js starter app for connecting 13 JACK STUDIO retail outlets with a centralized service operation.
+
+## Outlets
+
+- Aeon Bukit Tinggi
+- Paradigm Mall
+- Main Place
+- Aeon Permas Jaya
+- Aeon Seremban 2
+- Aeon Bukit Indah
+- Aeon Wangsa Maju
+- Aeon Kulaijaya
+- Berjaya Time Square
+- Alamanda Shopping
+- Sunway Carnival
+- Mayang Mall
+- East Coast Mall
 
 ## Modules
 
@@ -60,7 +76,7 @@ Run [supabase/schema.sql](./supabase/schema.sql) in the Supabase SQL editor befo
 
 The static UI demo is deployed with GitHub Pages:
 
-https://shernzai399.github.io/jack-studio-hub/
+https://shernzai399.github.io/jack-studio-service/
 
 For production with API routes and Supabase auth, deploy the same repository to Vercel and add the Supabase environment variables there.
 
@@ -68,7 +84,7 @@ For production with API routes and Supabase auth, deploy the same repository to 
 
 - Store Staff
 - Store Manager
-- Hub Admin
+- Service Admin
 - Inventory Admin
 - Super Admin
 

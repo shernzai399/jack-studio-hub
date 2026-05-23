@@ -26,7 +26,7 @@ export const storeRequestStatuses = [
 export const roles = [
   "store_staff",
   "store_manager",
-  "hub_admin",
+  "service_admin",
   "inventory_admin",
   "super_admin"
 ] as const;

@@ -6,7 +6,7 @@ import { roles } from "@/lib/types";
 const roleLabels = {
   store_staff: "Store Staff",
   store_manager: "Store Manager",
-  hub_admin: "Hub Admin",
+  service_admin: "Service Admin",
   inventory_admin: "Inventory Admin",
   super_admin: "Super Admin"
 };

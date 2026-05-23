@@ -30,7 +30,7 @@ export default function NewStoreRequestPage() {
               </Field>
               <Field label="Requesting store">
                 <select className={inputClass} name="from_store_id">
-                  {stores.slice(0, 12).map((store) => (
+                  {stores.map((store) => (
                     <option key={store}>{store}</option>
                   ))}
                 </select>
