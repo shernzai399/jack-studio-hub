@@ -56,6 +56,14 @@ SUPABASE_SERVICE_ROLE_KEY=
 
 Run [supabase/schema.sql](./supabase/schema.sql) in the Supabase SQL editor before connecting live data.
 
+## Public Demo
+
+The static UI demo is deployed with GitHub Pages:
+
+https://shernzai399.github.io/jack-studio-hub/
+
+For production with API routes and Supabase auth, deploy the same repository to Vercel and add the Supabase environment variables there.
+
 ## Roles
 
 - Store Staff
