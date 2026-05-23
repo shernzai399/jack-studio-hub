@@ -450,7 +450,9 @@ export async function fetchDashboardData() {
   if (serviceOrdersResult.error) throw serviceOrdersResult.error;
   if (pendingServiceResult.error) throw pendingServiceResult.error;
   if (productsResult.error) throw productsResult.error;
-  if (lowStockResult.error) throw lowStockResult.error;
+  // Low-stock is a helper view. If a deployment has not granted anon access yet,
+  // keep the rest of the dashboard usable and show zero alerts.
+  const lowStockItems = lowStockResult.error ? 0 : lowStockResult.data?.length ?? 0;
   if (pendingRequestsResult.error) throw pendingRequestsResult.error;
   if (movementsResult.error) throw movementsResult.error;
 
@@ -458,7 +460,7 @@ export async function fetchDashboardData() {
     totalRepairOrders: serviceOrdersResult.count ?? 0,
     pendingRepairOrders: pendingServiceResult.count ?? 0,
     totalSku: productsResult.count ?? 0,
-    lowStockItems: lowStockResult.data?.length ?? 0,
+    lowStockItems,
     pendingStoreRequests: pendingRequestsResult.count ?? 0,
     recentStockMovements: movementsResult.data ?? []
   };

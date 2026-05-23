@@ -113,6 +113,7 @@ grant select on public.stores to anon;
 grant select on public.locations to anon;
 grant select, insert, update on public.products to anon;
 grant select, insert, update on public.inventory to anon;
+grant select on public.low_stock_inventory to anon;
 grant select, insert on public.stock_movements to anon;
 grant select, insert on public.store_requests to anon;
 grant select, insert on public.store_request_items to anon;
