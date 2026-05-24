@@ -4,6 +4,7 @@ import type {
   Product,
   ProductStatus,
   ServiceOrder,
+  ServiceOrderDetail,
   ServiceOrderStatus,
   StockBalance,
   StockLocation,
@@ -22,6 +23,32 @@ type ServiceOrderRow = {
   updated_at: string;
   customers: { full_name: string } | null;
   stores: { name: string } | null;
+};
+
+type ServiceOrderDetailRow = ServiceOrderRow & {
+  created_at: string;
+  item_brand: string | null;
+  item_model: string | null;
+  item_color: string | null;
+  item_description: string;
+  issue_description: string;
+  requested_work: string | null;
+  quotation_notes: string | null;
+  expected_completion_date: string | null;
+  customers: {
+    full_name: string;
+    phone: string;
+    email: string | null;
+    preferred_contact: string | null;
+  } | null;
+  stores: { name: string } | null;
+};
+
+type ServicePhotoRow = {
+  id: string;
+  storage_path: string;
+  caption: string | null;
+  created_at: string;
 };
 
 type ProductRow = {
@@ -135,6 +162,73 @@ export async function fetchServiceOrders(): Promise<ServiceOrder[]> {
     quotationAmount: Number(row.quotation_amount ?? 0),
     updatedAt: formatDate(row.updated_at)
   }));
+}
+
+export async function fetchServiceOrderDetail(id: string): Promise<ServiceOrderDetail> {
+  const supabase = createSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from("service_orders")
+    .select(`
+      id,
+      order_no,
+      service_type,
+      status,
+      payment_status,
+      quotation_amount,
+      quotation_notes,
+      item_brand,
+      item_model,
+      item_color,
+      item_description,
+      issue_description,
+      requested_work,
+      expected_completion_date,
+      created_at,
+      updated_at,
+      customers(full_name, phone, email, preferred_contact),
+      stores(name)
+    `)
+    .eq("id", id)
+    .single();
+
+  if (error) throw error;
+
+  const row = data as unknown as ServiceOrderDetailRow;
+  const { data: photos } = await supabase
+    .from("service_photos")
+    .select("id, storage_path, caption, created_at")
+    .eq("service_order_id", id)
+    .order("created_at", { ascending: false });
+
+  return {
+    id: row.id,
+    orderNo: row.order_no,
+    customerName: row.customers?.full_name ?? "-",
+    customerPhone: row.customers?.phone ?? "-",
+    customerEmail: row.customers?.email ?? "",
+    preferredContact: row.customers?.preferred_contact ?? "",
+    storeName: row.stores?.name ?? "-",
+    serviceType: fromDbServiceType(row.service_type),
+    status: row.status,
+    paymentStatus: row.payment_status,
+    quotationAmount: Number(row.quotation_amount ?? 0),
+    quotationNotes: row.quotation_notes ?? "",
+    itemBrand: row.item_brand ?? "",
+    itemModel: row.item_model ?? "",
+    itemColor: row.item_color ?? "",
+    itemDescription: row.item_description,
+    issueDescription: row.issue_description,
+    requestedWork: row.requested_work ?? "",
+    expectedCompletionDate: row.expected_completion_date ?? "",
+    createdAt: formatDate(row.created_at),
+    updatedAt: formatDate(row.updated_at),
+    photos: ((photos ?? []) as ServicePhotoRow[]).map((photo) => ({
+      id: photo.id,
+      storagePath: photo.storage_path,
+      caption: photo.caption ?? "",
+      createdAt: formatDate(photo.created_at)
+    }))
+  };
 }
 
 export async function createServiceOrderInSupabase(input: {

@@ -38,6 +38,18 @@ on public.service_orders for insert
 to anon
 with check (true);
 
+drop policy if exists "anon can read service photos" on public.service_photos;
+create policy "anon can read service photos"
+on public.service_photos for select
+to anon
+using (true);
+
+drop policy if exists "anon can create service photos" on public.service_photos;
+create policy "anon can create service photos"
+on public.service_photos for insert
+to anon
+with check (true);
+
 drop policy if exists "anon can read products" on public.products;
 create policy "anon can read products"
 on public.products for select
@@ -109,6 +121,7 @@ with check (true);
 grant usage on schema public to anon;
 grant select, insert, update on public.customers to anon;
 grant select, insert, update on public.service_orders to anon;
+grant select, insert on public.service_photos to anon;
 grant select on public.stores to anon;
 grant select on public.locations to anon;
 grant select, insert, update on public.products to anon;

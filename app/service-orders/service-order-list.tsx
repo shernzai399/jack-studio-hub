@@ -103,6 +103,7 @@ export function ServiceOrderList() {
                 <th>Payment</th>
                 <th>Quotation</th>
                 <th>Updated</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/10">
@@ -116,11 +117,16 @@ export function ServiceOrderList() {
                   <td>{order.paymentStatus}</td>
                   <td>{order.quotationAmount ? `RM ${order.quotationAmount.toFixed(2)}` : "-"}</td>
                   <td>{order.updatedAt}</td>
+                  <td>
+                    <Link href={`/service-orders/detail?id=${order.id}`} className="font-semibold text-clay underline">
+                      View
+                    </Link>
+                  </td>
                 </tr>
               ))}
               {!isLoading && filteredOrders.length === 0 && (
                 <tr>
-                  <td className="py-6 text-center text-moss" colSpan={8}>No service orders found.</td>
+                  <td className="py-6 text-center text-moss" colSpan={9}>No service orders found.</td>
                 </tr>
               )}
             </tbody>

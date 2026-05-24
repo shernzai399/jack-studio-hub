@@ -63,6 +63,27 @@ export type ServiceOrder = {
   updatedAt: string;
 };
 
+export type ServiceOrderDetail = ServiceOrder & {
+  customerPhone: string;
+  customerEmail: string;
+  preferredContact: string;
+  itemBrand: string;
+  itemModel: string;
+  itemColor: string;
+  itemDescription: string;
+  issueDescription: string;
+  requestedWork: string;
+  quotationNotes: string;
+  expectedCompletionDate: string;
+  createdAt: string;
+  photos: {
+    id: string;
+    storagePath: string;
+    caption: string;
+    createdAt: string;
+  }[];
+};
+
 export type StoreRequest = {
   id: string;
   requestNo: string;
