@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import type { ReactNode } from "react";
-import { ArrowLeftRight, Boxes, ClipboardList, LayoutDashboard, PackagePlus, PackageSearch, Settings, SlidersHorizontal } from "lucide-react";
+import { ArrowLeftRight, Boxes, ClipboardList, LayoutDashboard, Menu, PackagePlus, PackageSearch, Settings, SlidersHorizontal, X } from "lucide-react";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -17,6 +20,27 @@ const navItems = [
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const navigation = (
+    <nav className="grid gap-1 px-3">
+      {navItems.map((item) => {
+        const Icon = item.icon;
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="flex min-h-11 items-center gap-3 rounded-md px-3 text-sm font-medium text-white/78 transition hover:bg-white/10 hover:text-white"
+          >
+            <Icon aria-hidden size={18} />
+            {item.label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+
   return (
     <div className="min-h-screen bg-pearl">
       <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-black/10 bg-ink text-white lg:block">
@@ -24,28 +48,51 @@ export function AppShell({ children }: { children: ReactNode }) {
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/55">JACK STUDIO</p>
           <h1 className="mt-2 text-2xl font-semibold tracking-normal">Service</h1>
         </div>
-        <nav className="grid gap-1 px-3">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex min-h-11 items-center gap-3 rounded-md px-3 text-sm font-medium text-white/78 transition hover:bg-white/10 hover:text-white"
-              >
-                <Icon aria-hidden size={18} />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        {navigation}
       </aside>
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-30 lg:hidden">
+          <button
+            type="button"
+            aria-label="Close menu"
+            className="absolute inset-0 bg-black/35"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          <aside className="relative h-full w-72 max-w-[86vw] border-r border-black/10 bg-ink py-4 text-white shadow-2xl">
+            <div className="mb-4 flex items-start justify-between gap-3 px-6">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/55">JACK STUDIO</p>
+                <h1 className="mt-2 text-2xl font-semibold tracking-normal">Service</h1>
+              </div>
+              <button
+                type="button"
+                aria-label="Close menu"
+                className="grid size-10 place-items-center rounded-md bg-white/10 text-white"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            {navigation}
+          </aside>
+        </div>
+      )}
       <div className="lg:pl-64">
         <header className="sticky top-0 z-10 border-b border-black/10 bg-pearl/90 px-4 py-4 backdrop-blur md:px-8">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-clay">13 outlets connected</p>
-              <h2 className="text-xl font-semibold text-ink">Central Service Operations</h2>
+            <div className="flex items-start gap-3">
+              <button
+                type="button"
+                aria-label="Open menu"
+                className="grid size-10 shrink-0 place-items-center rounded-md border border-black/10 bg-white text-ink lg:hidden"
+                onClick={() => setIsMobileMenuOpen(true)}
+              >
+                <Menu size={20} />
+              </button>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-clay">13 outlets connected</p>
+                <h2 className="text-xl font-semibold text-ink">Central Service Operations</h2>
+              </div>
             </div>
             <div className="rounded-md border border-black/10 bg-white px-3 py-2 text-sm text-moss">
               Signed in as: Super Admin
