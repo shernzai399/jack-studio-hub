@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LockKeyhole, UserRound } from "lucide-react";
 import { Card, Field, PrimaryButton, inputClass } from "@/components/ui";
@@ -18,12 +19,12 @@ export function SignInForm() {
     }
   }, [router]);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
 
     try {
-      signInInternal(userId, password);
+      await signInInternal(userId, password);
       router.push("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to sign in.");
@@ -56,6 +57,12 @@ export function SignInForm() {
           </Field>
           <PrimaryButton type="submit">Sign in</PrimaryButton>
         </form>
+        <p className="mt-5 text-center text-sm text-moss">
+          Need an account?{" "}
+          <Link href="/register" className="font-semibold text-clay underline">
+            Register new user
+          </Link>
+        </p>
       </Card>
     </main>
   );
